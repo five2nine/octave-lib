@@ -1,5 +1,8 @@
 classdef Animator < handle
-    % Animator - Octave용 시뮬레이션 애니메이션 저장 클래스
+    % Animator - 시뮬레이션 애니메이션 저장 클래스
+    %
+    % 지원:
+    %   Octave
     %
     % 속성:
     %   VideoWriterObj - VideoWriter 객체 (애니메이션 저장)

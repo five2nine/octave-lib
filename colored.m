@@ -1,5 +1,8 @@
 function outputText = colored(text, hex)
-    % colored - Octave에서 텍스트에 hex 색상 코드를 적용하여 ANSI escape 코드 형식으로 출력하는 함수
+    % colored - 텍스트에 hex 색상 코드를 적용하여 ANSI escape 코드 형식으로 출력하는 함수
+    %
+    % 지원:
+    %   Octave
     %
     % 입력:
     %   text - 출력할 텍스트

@@ -1,5 +1,8 @@
 function fig = createCenteredFigure(figNumber, varargin)
-    % createCenteredFigure - Octave용 figure 창을 중앙에 위치시키고 크기를 설정하는 함수
+    % createCenteredFigure - figure 창을 중앙에 위치시키고 크기를 설정하는 함수
+    %
+    % 지원:
+    %   Matlab and Octave
     %
     % 입력:
     %   figNumber: figure 번호 (예: 111)

@@ -1,5 +1,8 @@
 function rgb = hex2rgb(hex)
-    % hex2rgb - Octave용 HEX 색상 코드를 [R G B]로 변환하는 함수
+    % hex2rgb - HEX 색상 코드를 [R G B]로 변환하는 함수
+    %
+    % 지원:
+    %   Matlab and Octave
     %
     % 입력:
     %   hex - HEX 색상 코드 (예: "#RRGGBB" 또는 "RRGGBB")
@@ -15,5 +18,5 @@ function rgb = hex2rgb(hex)
     r = hex2dec(hex(1:2)) / 255;
     g = hex2dec(hex(3:4)) / 255;
     b = hex2dec(hex(5:6)) / 255;
-    rgb = [r, g, b]
+    rgb = [r, g, b];
 end
