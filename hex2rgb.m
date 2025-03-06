@@ -10,9 +10,10 @@ function rgb = hex2rgb(hex)
     % 사용 예:
     %   rgb = hex2rgb("#3498db") % 결과: [0.2039 0.5961 0.8588]
 
-    if hex(1) == "#"
-        hex = hex(2:end); % '#' 제거
-    end
-
-    rgb = [hex2dec(hex(1:2)), hex2dec(hex(3:4)), hex2dec(hex(5:6))] / 255;
+    % hex 색상 코드에서 '#'을 제거하고 RGB로 변환
+    hex = strrep(hex, '#', '');
+    r = hex2dec(hex(1:2)) / 255;
+    g = hex2dec(hex(3:4)) / 255;
+    b = hex2dec(hex(5:6)) / 255;
+    rgb = [r, g, b]
 end
