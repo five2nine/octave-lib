@@ -18,8 +18,24 @@ function formatted_str = fmt(fmt_str)
     %   name = 'Alice';
     %   age = 30;
     %   formatted_str = fmt('Name: {name}, Age: {age}');
-    %   disp(formatted_str);  % 결과: 'Name: Alice, Age: 30'
-    
+    %   disp(formatted_str);
+    % 
+    % 결과: 
+    % 'Name: Alice, Age: 30'
+    % 
+    % 사용 예시:
+    %   name = "Alice";
+    %   age = 25;
+    %   height = 168.5;
+    %   printf(colored("Candidate\n", "#FF5733"))
+    %   printf(colored(fmt("- Name: {name}\n- Age: {age}\n- Height: {height} cm\n")))
+    % 
+    % 결과: 
+    % Candidate가 빨간색으로 출력되고,
+    % - Name: Alice
+    % - Age: 25
+    % - Height: 168.5 cm가 출력됨
+
     % 중괄호 안의 변수명을 추출 (정규 표현식 사용)
     tokens = regexp(fmt_str, '\{([^}]+)\}', 'tokens');
     
