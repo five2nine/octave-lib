@@ -1,12 +1,12 @@
 function outputText = colored(text, hex)
     % colored - 텍스트에 hex 색상 코드를 적용하여 ANSI escape 코드 형식으로 출력하는 함수
-    %
+    % 
     % 지원:
     %   Octave
     %
     % 입력:
     %   text - 출력할 텍스트
-    %   hex - 16진수 색상 코드 (예: '#FF5733')
+    %   hex - 16진수 색상 코드 (예: '#FF5733'). 만약 제공되지 않으면 기본 색상 '#171717' 사용.
     %
     % 출력:
     %   outputText - 색상 코드가 적용된 텍스트 (ANSI escape 코드 포함)
@@ -18,6 +18,11 @@ function outputText = colored(text, hex)
     % 사용 예시:
     %   result = colored('This is red text', '#FF0000');
     %   disp(result);
+
+    % hex 색상 코드가 비어 있으면 기본 색상 '#171717' 사용
+    if nargin < 2 || isempty(hex)
+        hex = '#171717';  % 기본 색상 설정
+    end
 
     % hex 색상 코드에서 '#'을 제거하고 RGB로 변환
     hex = strrep(hex, '#', '');
