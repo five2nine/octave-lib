@@ -22,6 +22,33 @@ function fig = createCenteredFigure(figNumber, varargin)
     %   fig = createCenteredFigure(112, 'Size', [800, 600]);
     %   fig = createCenteredFigure(113, 'Size', [800, 600], 'Move', [200, 100]);
     %   fig = createCenteredFigure(114, 'Size', [800, 600], 'Title', 'Custom Figure', 'Color', [0.7, 0.7, 0.7]);
+    # 
+    # 복합 예시:
+    # 
+    #   설명: centeredFigure와 subplot을 직접 사용
+    # 
+    #   createCenteredFigure(111, "Size", [1280, 960], "Move", [-1280, 0], "Title", "Time Data");
+    #   
+    #   params1 = {"FontSize", 20, "NextPlot", "add", "XGrid", "on", "YGrid", "on"};
+    #   params2 = {"Xlabel", "Time [sec]", "Ylabel", "Acc. [m/s^2]"};
+    #   ax1 = subplot(2, 1, 1, "parent", 111, [params1 params2]{:}); labeltext1 = {};
+    #   ax2 = subplot(2, 1, 2, "parent", 111, [params1 params2]{:}); labeltext2 = {};
+    #   
+    #   plot(ax1, tt, x1, "color", hex2color("#69A1FA"), "linewidth", 1.2); labeltext1{end+1} = varname(x1);
+    #   plot(ax1, tt, x2, "color", hex2color("#CF87DA"), "linewidth", 1.2); labeltext1{end+1} = varname(x2);
+    #   if ~isempty(labeltext1); legend1 = legend(ax1, labeltext1); end
+    #   
+    #   plot(ax2, tt, ff1, "linewidth", 1.2); labeltext2{end+1} = varname(ff1);;
+    #   plot(ax2, tt, ffg, "linewidth", 1.2); labeltext2{end+1} = varname(ffg);;
+    #   plot(ax2, tt, ffc, "linewidth", 1.2); labeltext2{end+1} = varname(ffc);;
+    #   if ~isempty(labeltext2); legend2 = legend(ax2, labeltext2); end
+    #   
+    #   # Option axes(2, 1) position [left, bottom, width, height] and legend
+    #   params_legend = {"Orientation", "vertical", "Location", "northeastoutside"};
+    #   set(legend1, params_legend{:});
+    #   set(legend2, params_legend{:});
+    #   set(ax1, "Position", [0.1, 0.55, 0.78, 0.39]); # Base [0.1, 0.60, 0.8, 0.4] [left, bottom, width, height]
+    #   set(ax2, "Position", [0.1, 0.08, 0.78, 0.39]); # Base [0.1, 0.10, 0.8, 0.4] [left, bottom, width, height]
 
     % 옵션 파싱
     p = inputParser;
@@ -71,3 +98,4 @@ end
 function tf = isvalidFigure(figNumber)
     tf = ishandle(figNumber) && strcmp(get(figNumber, 'Type'), 'figure');
 end
+
