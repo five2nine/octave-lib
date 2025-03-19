@@ -9,7 +9,7 @@ function fig = createCenteredFigure(figNumber, varargin)
     %   옵션 (varargin):
     %       'Size'   - [Width Height] 형식의 크기 튜플 (기본값: [800, 600])
     %       'Move'   - [dx, dy] 형식의 상대적 이동값 (기본값: [0, 0])
-    %       'Title'  - 창의 제목 (기본값: 'Figure')
+    %       'Name'  - 창의 제목 (기본값: 'Figure')
     %       'Color'  - 배경색 ([R G B] 형식의 0~1 범위 실수 벡터, 기본값: [1 1 1])
     %
     % 설명:
@@ -21,13 +21,13 @@ function fig = createCenteredFigure(figNumber, varargin)
     %   fig = createCenteredFigure(111);
     %   fig = createCenteredFigure(112, 'Size', [800, 600]);
     %   fig = createCenteredFigure(113, 'Size', [800, 600], 'Move', [200, 100]);
-    %   fig = createCenteredFigure(114, 'Size', [800, 600], 'Title', 'Custom Figure', 'Color', [0.7, 0.7, 0.7]);
+    %   fig = createCenteredFigure(114, 'Size', [800, 600], 'Name', 'Custom Figure', 'Color', [0.7, 0.7, 0.7]);
     # 
     # 복합 예시:
     # 
     #   설명: centeredFigure와 subplot을 직접 사용
     # 
-    #   createCenteredFigure(111, "Size", [1280, 960], "Move", [-1280, 0], "Title", "Time Data");
+    #   createCenteredFigure(111, "Size", [1280, 960], "Move", [-1280, 0], "Name", "Time Data");
     #   
     #   params1 = {"FontSize", 20, "NextPlot", "add", "XGrid", "on", "YGrid", "on"};
     #   params2 = {"Xlabel", "Time [sec]", "Ylabel", "Acc. [m/s^2]"};
@@ -56,7 +56,7 @@ function fig = createCenteredFigure(figNumber, varargin)
     addRequired(p, 'figNumber', @isnumeric);
     addParameter(p, 'Size', [800, 600], @(x) isnumeric(x) && numel(x) == 2 && all(x > 0));
     addParameter(p, 'Move', [0, 0], @(x) isnumeric(x) && numel(x) == 2);
-    addParameter(p, 'Title', 'Figure', @ischar);
+    addParameter(p, 'Name', 'Figure', @ischar);
     addParameter(p, 'Color', [1 1 1], @(x) isnumeric(x) && numel(x) == 3);
 
     parse(p, figNumber, varargin{:});
@@ -64,7 +64,7 @@ function fig = createCenteredFigure(figNumber, varargin)
     % 값 할당
     sizeTuple = p.Results.Size;
     moveTuple = p.Results.Move;
-    titleStr = p.Results.Title;
+    titleStr = p.Results.Name;
     bgColor = p.Results.Color;
 
     width = sizeTuple(1);
