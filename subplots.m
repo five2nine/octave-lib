@@ -46,5 +46,11 @@ function [fig, axes] = subplots(nrows, ncols, param_fig, param_axes)
             ax = subplot(nrows, ncols, ncols * (i - 1) + j, "parent", fig, param_axes{:});
             axes(i, j) = ax;
         end
-    end
+    end % 이렇게 해야 사용할 떄 열 우선이 된다
+    # for j = 1:ncols
+    #     for i = 1:nrows
+    #         ax = subplot(nrows, ncols, i + nrows * (j - 1), "parent", fig, param_axes{:});
+    #         axes(i, j) = ax;
+    #     end
+    # end
 end
