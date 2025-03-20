@@ -1,4 +1,4 @@
-function [fig, axes] = subplots(nrows, ncols, param_fig, param_axes)
+function [fig, axes] = subplots(nrows, ncols, paramf, parama)
     % subplots - 다중 서브플롯을 생성하는 함수
     %
     % 지원:
@@ -7,8 +7,8 @@ function [fig, axes] = subplots(nrows, ncols, param_fig, param_axes)
     % 입력:
     %   nrows      - 서브플롯의 행 개수 (기본값: 1)
     %   ncols      - 서브플롯의 열 개수 (기본값: 1)
-    %   param_fig  - figure 설정을 위한 파라미터 리스트 (셀 배열, 기본값: {})
-    %   param_axes - axes 설정을 위한 파라미터 리스트 (셀 배열, 기본값: {})
+    %   paramf  - figure 설정을 위한 파라미터 리스트 (셀 배열, 기본값: {})
+    %   parama - axes 설정을 위한 파라미터 리스트 (셀 배열, 기본값: {})
     %
     % 출력:
     %   fig  - 생성된 figure 핸들
@@ -18,39 +18,32 @@ function [fig, axes] = subplots(nrows, ncols, param_fig, param_axes)
     %   - 지정된 행(nrows)과 열(ncols) 크기로 서브플롯을 배치함
     %   - subplot 인덱스는 C 언어 스타일(행 우선) 순서로 배치됨
     %   - fig의 ID는 무작위로 생성됨 (hex 값 범위: F000 ~ FFFF)
-    %   - nrows, ncols, param_fig, param_axes가 없을 경우 기본값을 사용
+    %   - nrows, ncols, paramf, param_axes가 없을 경우 기본값을 사용
     %
     % 사용 예시:
-    %   [fig, ax] = subplots();           % 1x1 서브플롯 생성
-    %   [fig, ax] = subplots(2, 3);       % 2x3 서브플롯 생성
-    %   [fig, ax] = subplots(2, 3, {'Size', [800, 600]});
-    %   [fig, ax] = subplots(2, 3, {'Size', [800, 600]}, {'XGrid', 'on'});
+    %   [fig, axes] = subplots();           % 1x1 서브플롯 생성
+    %   [fig, axes] = subplots(2, 3);       % 2x3 서브플롯 생성
+    %   [fig, axes] = subplots(2, 3, {'Size', [800, 600]});
+    %   [fig, axes] = subplots(2, 3, {'Size', [800, 600]}, {'XGrid', 'on'});
 
     if nargin < 1, nrows = 1; end
     if nargin < 2, ncols = 1; end
-    if nargin < 3, param_fig = {"Size", [720, 480]}; end
-    if nargin < 4, param_axes = {"FontSize", 16, "NextPlot", "add", "XGrid", "on", "YGrid", "on"}; end
+    if nargin < 3, paramf = {"Size", [720, 480]}; end
+    if nargin < 4, parama = {"FontSize", 16, "NextPlot", "add", "XGrid", "on", "YGrid", "on"}; end
 
-    % 랜덤한 figure ID 생성
-    figid = randi([hex2dec('F000'), hex2dec('FFFF')]);
-    
     % figure 생성
-    fig = createCenteredFigure(figid, param_fig{:});
+    fig = createCenteredFigure(paramf{:});
     
     % axes 핸들 저장용 행렬 초기화
     axes = zeros(nrows, ncols);
     
     % 서브플롯 생성 및 axes 핸들 저장
-    for i = 1:nrows
-        for j = 1:ncols
-            ax = subplot(nrows, ncols, ncols * (i - 1) + j, "parent", fig, param_axes{:});
+    # axes 인덱스는 Fortran 방식 subplot 인덱스는 C 방식
+    for j = 1:ncols
+        for i = 1:nrows
+            ax = subplot(nrows, ncols, ncols * (i - 1) + j, "parent", fig, parama{:});
             axes(i, j) = ax;
         end
-    end % 이렇게 해야 사용할 떄 열 우선이 된다
-    # for j = 1:ncols
-    #     for i = 1:nrows
-    #         ax = subplot(nrows, ncols, i + nrows * (j - 1), "parent", fig, param_axes{:});
-    #         axes(i, j) = ax;
-    #     end
-    # end
+    end
+
 end
