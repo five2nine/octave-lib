@@ -95,9 +95,9 @@ classdef Polynomial < handle
             if length(S) == 1 && strcmp(S(1).type, "()")
                 % obj() 호출 시 evaluate 수행
                 result = obj.evaluate(S(1).subs{1});
-            elseif length(S) == 1 && strcmp(S(1).type, "{}")
-                % obj{} 호출 시 coeff 반환
-                result = obj.coeff;
+            # elseif length(S) == 1 && strcmp(S(1).type, "{}")
+            #     % obj{} 호출 시 coeff 반환. 따라서 fmt와 함께 사용 못함
+            #     result = obj.coeff;
             else
                 % 기본 동작 유지
                 result = builtin("subsref", obj, S);
