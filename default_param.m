@@ -1,5 +1,5 @@
-function params = default_params()
-    % params 함수는 그래픽 객체의 다양한 속성을 저장하는 구조체를 반환합니다.
+function param = default_param()
+    % default_param 함수는 그래픽 객체의 다양한 속성을 저장하는 구조체를 반환합니다.
     % 각 파라미터 그룹은 특정 그래픽 요소에 대한 속성 설정을 포함합니다.
     
     % Axes 속성 설정 (폰트 크기, 플롯 모드, 그리드 설정)
@@ -60,10 +60,10 @@ function params = default_params()
     param_t2 = {"Interpreter", "none", "Color", hex2color("#293134")};
 
     % 구조체에 각 파라미터 그룹 저장
-    params.f = param_f1;
-    params.at = [param_a1, param_a2];
-    params.af = [param_a1, param_a3];
-    params.p = param_p1;
-    params.l = param_l1;
-    params.t = [param_t1, param_t2];
+    param.f = param_f1;
+    param.at = [param_a1, param_a2];
+    param.af = [param_a1, param_a3];
+    param.p = param_p1;
+    param.l = param_l1;
+    param.t = [param_t1, param_t2];
 end
