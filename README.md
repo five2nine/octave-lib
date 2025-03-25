@@ -27,12 +27,23 @@ addpath(genpath(pwd))
 
 자주 사용하는 함수의 확장을 만들고 기본 파라메타를 부여하였다.
 
-- figured: 중앙 정렬 및 크기 설정이 가능한 figure 생성 함수
-- subplots: 다중 서브플롯을 생성하는 함수
+- figured: figure 기본 파라메타를 가지며 창을 중앙에 위치시킨다.
+- subplots: 다중 서브플롯을 생성하며 기본 파라메타를 가진다.
 - plotd: plot 함수의 확장 버전으로서 기본 파라메타를 가진다.
 - textd: text 함수의 확장 버전으로서 기본 파라메타를 가진다.
 - Animator: 애니메이션을 동영상으로 저장하는 클래스이다.
 - merge_params: 기존 파라미터와 새로운 파라미터를 병합하는 함수
+
+## 유틸리티 함수
+
+- hex2color: 헥스코드를 [0, 1] 범위의 rgb로 변환한다.
+- hex2rgb: 헥스코드를 정수 rgb로 변환한다.
+- h2c: hex2color의 축약형이다.
+- fmt: 파이썬의 fstring과 같은 역할을 한다. 옵션으로 ANSI 컬러를 가진다.
+- colored: 문자열에 ANSI 컬러를 추가한다.
+- perform_run: 메인 스크립트의 실행 시간을 출력한다.
+- Sample: 시간축과 주파수축을 계산하는 클래스이다.
+- TimeTracker: 루프 안에서 시간을 추적하고 계산하는 클래스이다.
 
 ## 기본 설정
 
