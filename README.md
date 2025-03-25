@@ -20,11 +20,6 @@ then add folder to Octave project
 
 ```octave
 addpath(genpath("octave-lib))
-```
-
-or 
-
-```octave
 addpath(genpath(pwd))
 ```
 
@@ -32,12 +27,12 @@ addpath(genpath(pwd))
 
 자주 사용하는 함수의 확장을 만들고 기본 파라메타를 부여하였다.
 
-- figured: figure 기본 파라메타를 가지며 창을 중앙에 위치시킨다.
-- subplots: 다중 서브플롯을 생성하며 기본 파라메타를 가진다.
+- figured: 중앙 정렬 및 크기 설정이 가능한 figure 생성 함수
+- subplots: 다중 서브플롯을 생성하는 함수
 - plotd: plot 함수의 확장 버전으로서 기본 파라메타를 가진다.
 - textd: text 함수의 확장 버전으로서 기본 파라메타를 가진다.
-- default_parameter: 기본 파라메타의 값을 구조체로 가진다. (deprecated)
 - Animator: 애니메이션을 동영상으로 저장하는 클래스이다.
+- merge_params: 기존 파라미터와 새로운 파라미터를 병합하는 함수
 
 ## 기본 설정
 

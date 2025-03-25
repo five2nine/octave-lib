@@ -1,62 +1,73 @@
 function h1 = plotd(varargin)
-    % plotd: plot 함수의 확장 버전
-    % varargin: ax, x, y, 그리고 사용자 정의 옵션
-
-    % 입력 인자 개수 확인
-    n = nargin;
-
+    % plotd: plot 함수의 확장 버전으로, x, y 데이터를 플로팅하고
+    %        추가적으로 사용자 지정 옵션과 레전드를 처리하는 함수입니다.
+    %
+    % 지원:
+    %   Octave
+    %
+    %
+    % 입력:
+    %   varargin - 다양한 입력 인자들
+    %             - 첫 번째 인자: axes 핸들 (선택사항)
+    %             - 두 번째와 세 번째 인자: x, y 데이터
+    %             - 나머지 인자들: 사용자 정의 plot 옵션 (예: 'LineWidth', 2)
+    %
+    % 출력:
+    %   h1 - 플로팅된 그래프의 핸들
+    %
+    % 설명:
+    %   - 첫 번째 인자가 axes 핸들인 경우 해당 axes에 그래프를 그립니다.
+    %   - x와 y 데이터는 두 번째와 세 번째 인자로 입력받습니다.
+    %   - 사용자 지정 plot 옵션을 추가적으로 처리하고, 자동으로 레전드를 생성합니다.
+    %   - 만약 'DisplayName'이 포함되면 이를 레전드에 자동으로 반영합니다.
+    %   - 세미콜론으로 감싸진 문자열을 레전드 텍스트로 사용합니다.
+    %
+    % 사용 예시:
+    %   % 기본 플로팅 예시
+    %   plotd(x, y);
+    %
+    %   % 사용자 정의 옵션과 레전드를 포함한 플로팅 예시
+    %   plotd(gca, x, y, 'LineWidth', 2, 'DisplayName', 'My Data');
+    %   % 여기서 'My Data'는 레전드에 자동으로 추가됩니다.
+    %
+    %   % 세미콜론으로 감싸진 레전드 텍스트 예시
+    %   plotd(x, y, ';Custom Legend;');
+    %   % 'Custom Legend'가 레전드로 추가됩니다.
+    
     % 첫 번째 인자가 axes 핸들인지 확인
-    if n >= 1 && length(varargin{1})==1 && isaxes(varargin{1})
+    if nargin >= 1 && length(varargin{1})==1 && isaxes(varargin{1})
         ax = varargin{1};
         varargin(1) = [];
     else
         ax = gca;
     end
 
-    % x, y 값 설정
-    if n >= 2
+    if nargin >= 2
+        % 나머지의 첫 번째와 두 번째 인자는 x와 y로 할당
         x = varargin{1};
-        varargin(1) = [];
-        y = varargin{1};
-        varargin(1) = [];
+        y = varargin{2};
+        varargin([1, 2]) = [];
     else
         error('x, y 값이 필요합니다.');
     end
 
-    % 자동 레전드 형식 추출(앞뒤 세미콜론 형식)
-    filtered_varargin = {};
-    single_string_param = '';
+    % 자동 레전드 형식 추출
+    [varargin, legend_texts] = extract_semi_colon_string(varargin);
 
-    for i = 1:length(varargin)
-        if ischar(varargin{i}) && startsWith(varargin{i}, ";") && endsWith(varargin{i}, ";")
-            single_string_param = varargin{i}(2:end-1);
-        else
-            filtered_varargin{end+1} = varargin{i};
-        end
-    end
+    % 기본 plot 파라미터
+    param_p = {"LineWidth", 1.2};
+    
+    % 사용자 지정 인자와 병합
+    param_p = merge_params(param_p, varargin);
 
-    % 파라미터 파싱 (일반 옵션만 저장)
-    p = inputParser;
-    p.CaseSensitive = false;
-    addParameter(p, 'LineWidth', 1.2, @isnumeric);
-    addParameter(p, 'DisplayName', '', @ischar);
-    parse(p, filtered_varargin{:});
-
-    % 파라미터 설정
-    linewidth = p.Results.LineWidth;
-
-    % 파라미터 묶기
-    param_p = {'LineWidth', linewidth};
-    param_p = merge_params(param_p, filtered_varargin);
-
-    # DisplayName 항목을 제거하고 ;display_name; 형식 추가
+    % DisplayName -> 자동 레전드
     idx = find(strcmp(param_p(1:2:end), "DisplayName"), 1);
     if ~isempty(idx)
         display_name = param_p{2*idx};
-        param_p([2*idx-1, 2*idx]) = [];  % "DisplayName" 키와 값 제거
+        param_p([2*idx-1, 2*idx]) = [];
         param_p = [param_p, [";", display_name, ";"]];
-    elseif ~isempty(single_string_param)  % 빈 문자열이 아닌 경우
-        display_name = single_string_param;
+    elseif ~isempty(legend_texts)
+        display_name = legend_texts{1};
         param_p = [param_p, [";", display_name, ";"]];
     end
 
@@ -64,16 +75,42 @@ function h1 = plotd(varargin)
     h1 = plot(ax, x, y, param_p{:});
 end
 
-function merged_params = merge_params(default_params, user_params)
-    % 기본값과 사용자 입력을 병합하는 함수
-    merged_params = default_params;
-    for i = 1:2:length(user_params)
-        key = user_params{i};
-        idx = find(strcmp(merged_params(1:2:end), key), 1); % 기존 키 검색
-        if ~isempty(idx)
-            merged_params{2*idx} = user_params{i+1}; % 기존 값 덮어쓰기
+
+function [filtered_varargin, legend_texts] = extract_semi_colon_string(varargin)
+    % extract_semi_colon_string - 세미콜론으로 감싸진 문자열을 추출하고 나머지 인자들을 필터링하는 함수
+    %
+    % 입력:
+    %   varargin - 다양한 입력 인자들
+    %
+    % 출력:
+    %   filtered_varargin - 세미콜론으로 감싸지지 않은 나머지 인자들
+    %   legend_texts - 세미콜론으로 감싸진 문자열들의 셀 배열 (있다면)
+    %
+    % 설명:
+    %   - 입력 인자 중 앞뒤에 세미콜론이 있는 문자열들을 추출하여 legend_text에 저장
+    %   - 나머지 인자들은 filtered_varargin에 저장하여 반환
+    %
+    % 사용 예시:
+    %   [filtered_varargin, legend_texts] = extract_semi_colon_string('param1', ';myString;', 'param2');
+    %   % filtered_varargin = {'param1', 'param2'}
+    %   % legend_texts = {'myString'}
+
+    % varargin이 셀 배열인 경우 이를 평탄화
+    if length(varargin) == 1 && iscell(varargin{1})
+        varargin = varargin{1};
+    end
+
+    % 초기화
+    filtered_varargin = {};
+    legend_texts = {};
+
+    % 입력 인자 처리
+    for i = 1:length(varargin)
+        % 세미콜론으로 감싸진 문자열 처리
+        if ischar(varargin{i}) && startsWith(varargin{i}, ";") && endsWith(varargin{i}, ";")
+            legend_texts{end+1} = varargin{i}(2:end-1);  % 세미콜론 제거 후 저장
         else
-            merged_params = [merged_params, key, user_params{i+1}]; % 새로운 키 추가
+            filtered_varargin{end+1} = varargin{i};
         end
     end
 end

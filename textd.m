@@ -1,12 +1,35 @@
 function h1 = textd(varargin)
-    % plotd: plot 함수의 확장 버전
-    % varargin: ax, x, y, 그리고 사용자 정의 옵션
-
-    % 입력 인자 개수 확인
-    n = nargin;
-
+    % textd: 텍스트를 플로팅하는 함수, 사용자 지정 옵션을 처리하며
+    %        주어진 (x, y) 좌표에 텍스트를 표시합니다.
+    %
+    % 지원:
+    %   Octave
+    %
+    % 입력:
+    %   varargin - 다양한 입력 인자들
+    %             - 첫 번째 인자: axes 핸들 (선택사항)
+    %             - 두 번째, 세 번째, 네 번째 인자: x, y, 텍스트 문자열
+    %             - 나머지 인자들: 사용자 정의 텍스트 옵션 (예: 'FontSize', 16)
+    %
+    % 출력:
+    %   h1 - 그려진 텍스트 객체의 핸들
+    %
+    % 설명:
+    %   - 첫 번째 인자가 axes 핸들인 경우 해당 axes에 텍스트를 그립니다.
+    %   - x와 y 좌표, 텍스트 문자열을 입력받아 텍스트를 지정된 위치에 표시합니다.
+    %   - 텍스트의 색상, 글꼴 크기 등은 기본값을 가지며, 추가적인 사용자 정의 옵션을 지정할 수 있습니다.
+    %   - 텍스트 스타일은 기본값을 사용할 수 있으며, 나머지 옵션들은 `varargin`을 통해 처리됩니다.
+    %
+    % 사용 예시:
+    %   % 기본 텍스트 그리기
+    %   textd(x, y, 'Hello, World!');
+    %
+    %   % 사용자 정의 텍스트 스타일 적용 예시
+    %   textd(gca, x, y, 'Custom Text', 'FontSize', 14, 'Color', 'red');
+    %   % 여기서 'Custom Text'는 (x, y) 위치에 빨간색 글꼴 크기 14로 표시됩니다.
+    
     % 첫 번째 인자가 axes 핸들인지 확인
-    if n >= 1 && length(varargin{1})==1 && isaxes(varargin{1})
+    if nargin >= 1 && length(varargin{1})==1 && isaxes(varargin{1})
         ax = varargin{1};
         varargin(1) = [];
     else
@@ -14,42 +37,24 @@ function h1 = textd(varargin)
     end
 
     % x, y 값 설정
-    if n >= 3
+    if nargin >= 3
+        % 나머지의 첫 번째, 두 번째, 세 번째 인자는 x, y, t로 할당
         x = varargin{1};
-        varargin(1) = [];
-        y = varargin{1};
-        varargin(1) = [];
-        t = varargin{1};
-        varargin(1) = [];
+        y = varargin{2};
+        t = varargin{3};
+        varargin([1, 2, 3]) = [];
     else
-        error('x, y 값이 필요합니다.');
+        error('x, y, t 값이 필요합니다.');
     end
 
-    % 파라미터 파싱 (일반 옵션만 저장)
-    p = inputParser;
-    p.CaseSensitive = false;
-    addParameter(p, 'Units', 'Normalized', @ischar);
-    addParameter(p, 'FontSize', 20, @isnumeric);
-    addParameter(p, 'FontWeight', 'normal', @ischar);
-    addParameter(p, 'Interpreter', 'none', @ischar);
-    addParameter(p, 'Color', hex2color("#293134"), @ischar);
-    parse(p, varargin{:});
+    % 기본 text 파라미터
+    param_t = {
+        "Units", "Normalized", "Color", hex2color("#293134"), ...
+        "FontSize", 20, "FontWeight", "normal", "Interpreter", "none"
+    };
 
-    % 파라미터 설정
-    units = p.Results.Units;
-    fontSize = p.Results.FontSize;
-    fontWeight = p.Results.FontWeight;
-    interpreter = p.Results.Interpreter;
-    color = p.Results.Color;
-
-    % 추가 옵션 저장
-    param_t0 = varargin(~ismember(varargin, fieldnames(p.Results)));
-
-    % 파라미터 묶기
-    param_t1 = {"Units", units, "FontSize", fontSize, "FontWeight", fontWeight, "Interpreter", interpreter, "Color", color};
-
-    % 파라미터 합치기
-    param_t = [param_t0, param_t1];
+    % 사용자 지정 인자와 병합
+    param_t = merge_params(param_t, varargin);
 
     % 텍스트 그리기
     h1 = text(ax, x, y, t, param_t{:});

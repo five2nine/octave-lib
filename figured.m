@@ -1,68 +1,80 @@
 function fig = figured(varargin)
-    % figured - figure 창을 중앙에 위치시키고 크기를 설정하는 함수
+    % figured - 중앙 정렬 및 크기 설정이 가능한 figure 생성 함수
     %
     % 지원:
-    %   Matlab and Octave
+    %   - Octave
     %
     % 입력:
-    %   옵션 (varargin):
-    %       'Position'   - [left bottom width height] 형식의 위치 및 크기 (기본값: 없음)
-    %       'Size'       - [Width Height] 형식의 크기 튜플 (기본값: [1280, 720])
-    %       'Move'       - [dx, dy] 형식의 상대적 이동값 (기본값: [0, 0])
-    %       'Name'       - 창의 제목 (기본값: 'Figure')
-    %       'Color'      - 배경색 ([R G B] 형식의 0~1 범위 실수 벡터, 기본값: [1 1 1])
-    %       'NumberTitle' - 숫자 제목 표시 여부 (true 또는 false, 기본값: false)
+    %   varargin - 다양한 figure 속성을 설정하는 옵션 목록:
+    %       'Position'    - [left bottom width height] 형식의 위치 및 크기 (기본값: 자동 중앙 정렬)
+    %       'Size'        - [width height] 형식의 창 크기 (기본값: 화면 크기의 1/3)
+    %       'Move'        - 상대적 위치 이동값 [dx dy] (기본값: [0 0])
+    %       'Name'        - 창 제목 (기본값: 'Figure')
+    %       'Color'       - 배경색 [R G B] 형식 (기본값: [1 1 1])
+    %       'NumberTitle' - 창의 번호 표시 여부 (true 또는 false, 기본값: false)
+    %
+    % 출력:
+    %   fig - 생성된 figure의 핸들
     %
     % 설명:
-    %   - figure를 화면 중앙에 생성하고 이동 가능
-    %   - 배경색과 제목을 설정 가능
+    %   - figure 창을 화면 중앙에 배치
+    %   - 창 크기 및 위치를 설정 가능
+    %   - 배경색 및 창 제목 설정 지원
     %   - figure 핸들을 반환
-    %   
+    %
     % 사용 예시:
-    %   fig = figured();
-    %   fig = figured('Size', [800, 600]);
-    %   fig = figured('Move', [200, 100]);
-    %   fig = figured('NumberTitle', false);
+    %   fig = figured();                        % 기본 설정으로 figure 생성
+    %   fig = figured('Size', [800, 600]);      % 크기를 800x600으로 설정
+    %   fig = figured('Move', [200, 100]);      % 중앙에서 200px 우측, 100px 위로 이동
+    %   fig = figured('NumberTitle', false);    % 숫자 제목 숨김
 
-    % 파라미터 파싱
-    p = inputParser;
-    p.CaseSensitive = false;
-    addParameter(p, 'Position', [], @(x) isnumeric(x) && numel(x) == 4);
-    addParameter(p, 'Size', [1280, 720], @(x) isnumeric(x) && numel(x) == 2 && all(x > 0));
-    addParameter(p, 'Move', [0, 0], @(x) isnumeric(x) && numel(x) == 2);
-    addParameter(p, 'Name', 'Figure', @ischar);
-    addParameter(p, 'Color', [1 1 1], @(x) isnumeric(x) && numel(x) == 3);
-    addParameter(p, 'NumberTitle', false, @(x) islogical(x) || (isnumeric(x) && ismember(x, [0, 1])));
+    % varargin에서 첫 번째 인자가 셀 배열인 경우 처리
+    if length(varargin) == 1 && iscell(varargin{1})
+        varargin = varargin{1};
+    end
 
-    parse(p, varargin{:});
-
-    % 파라미터 설정
-    pos = p.Results.Position;
-    sizeTuple = p.Results.Size;
-    moveTuple = p.Results.Move;
-    titleStr = p.Results.Name;
-    bgColor = p.Results.Color;
-    numberTitle = p.Results.NumberTitle;
-
-    % 위치 및 크기 설정 (Move 기준 중앙 배치)
-    screenSize = get(0, 'ScreenSize'); % [left, bottom, width, height]
+    % 창 크기 및 위치를 설정
+    screenSize = get(0, 'ScreenSize'); % [x y width height]
     screenWidth = screenSize(3);
     screenHeight = screenSize(4);
+    
+    sizeIdx = find(strcmp(varargin, "Size"));
+    moveIdx = find(strcmp(varargin, "Move"));
+    
+    if ~isempty(sizeIdx) && sizeIdx < length(varargin)
+        sizeVal = varargin{sizeIdx + 1};
+        windowWidth = sizeVal(1);
+        windowHeight = sizeVal(2);
+    else
+        windowWidth = floor(screenWidth / 3);
+        windowHeight = floor(screenHeight / 3);
+    end
+    
+    if ~isempty(moveIdx) && moveIdx < length(varargin)
+        moveVal = varargin{moveIdx + 1};
+        moveX = moveVal(1);
+        moveY = moveVal(2);
+    else
+        moveX = 0;
+        moveY = 0;
+    end
 
-    % 중앙 기준 이동
-    left = (screenWidth - sizeTuple(1)) / 2 + moveTuple(1);
-    bottom = (screenHeight - sizeTuple(2)) / 2 + moveTuple(2);
-    pos = [left, bottom, sizeTuple(1), sizeTuple(2)];
+    % 화면 중앙 정렬 및 이동 적용
+    left = (screenWidth - windowWidth) / 2 + moveX;
+    bottom = (screenHeight - windowHeight) / 2 + moveY;
+    
+    % 최종 position 값 설정
+    position = [left, bottom, windowWidth, windowHeight];
 
-    % 추가 옵션 저장
-    parma_f0 = varargin(~ismember(varargin, fieldnames(p.Results)));
+    % 'Size' 및 'Move' 옵션 제거
+    varargin([sizeIdx, sizeIdx + 1, moveIdx, moveIdx + 1]) = [];
 
-    % 파라미터 묶기
-    param_f1 = {'Position', pos, 'Color', bgColor, 'Name', titleStr, 'NumberTitle', numberTitle};
+    param_f = {
+        "Position", position, "Name", "Figure", ...
+        "NumberTitle", false, "Color", [1 1 1], ...
+    };
+    param_f = merge_params(param_f, varargin);
 
-    % 파라미터 합치기
-    param_f = [parma_f0, param_f1];
-
-    % figure 생성 및 속성 설정
+    % figure 생성 및 속성 적용
     fig = figure(param_f{:});
 end
