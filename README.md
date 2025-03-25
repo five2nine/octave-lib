@@ -31,6 +31,7 @@ addpath(genpath(pwd))
 - subplots: 다중 서브플롯을 생성하며 기본 파라메타를 가진다.
 - plotd: plot 함수의 확장 버전으로서 기본 파라메타를 가진다.
 - textd: text 함수의 확장 버전으로서 기본 파라메타를 가진다.
+- legendd: legend 함수의 확장 버전으로서 기본 파라메타를 가진다.
 - Animator: 애니메이션을 동영상으로 저장하는 클래스이다.
 - merge_params: 기존 파라미터와 새로운 파라미터를 병합하는 함수
 

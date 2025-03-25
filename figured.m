@@ -69,10 +69,12 @@ function fig = figured(varargin)
     % 'Size' 및 'Move' 옵션 제거
     varargin([sizeIdx, sizeIdx + 1, moveIdx, moveIdx + 1]) = [];
 
+    % 기본 figure 파라미터
     param_f = {
         "Position", position, "Name", "Figure", ...
         "NumberTitle", false, "Color", [1 1 1], ...
     };
+    % 사용자 지정 인자와 병합
     param_f = merge_params(param_f, varargin);
 
     % figure 생성 및 속성 적용
