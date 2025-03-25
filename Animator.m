@@ -30,6 +30,7 @@ classdef Animator < handle
     %   clear anim; % 객체 삭제 시 자동으로 close() 실행
 
     properties
+        FigureHandle % 캡처할 figure 핸들
         VideoWriterObj  % VideoWriter 객체 핸들
         FrameRate = 60; % 기본 프레임 속도
         SaveFlag = true; % 애니메이션 저장 여부
@@ -52,6 +53,8 @@ classdef Animator < handle
 
             % 비디오 패키지 로드
             pkg load video;
+
+            obj.FigureHandle = gcf; % 현재 활성 figure를 저장
 
             if nargin == 0
                 filename = "output.mp4";
@@ -88,7 +91,7 @@ classdef Animator < handle
             %   - SaveFlag가 true일 때만 실행됩니다.
 
             if obj.SaveFlag
-                frame = getframe(gcf);
+                frame = getframe(obj.FigureHandle); % 특정 figure에서 캡처
                 writeVideo(obj.VideoWriterObj, frame);
             end
         end
