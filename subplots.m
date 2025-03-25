@@ -36,8 +36,12 @@ function [fig, axes] = subplots(nrows, ncols, varargin)
     ];
 
     % 기본값 설정
-    if nargin < 1, nrows = 1; end
-    if nargin < 2, ncols = 1; end
+    if nargin < 2
+        nrows = 1;
+        ncols = 1;
+    end
+    disp("varargin")
+    disp(varargin)
 
     % 파라미터 파싱
     p = inputParser;
@@ -63,6 +67,8 @@ function [fig, axes] = subplots(nrows, ncols, varargin)
 
     % 추가 옵션 저장
     param_a0 = varargin(~ismember(varargin, fieldnames(p.Results)));
+    disp("param_a0")
+    disp(param_a0)
 
     % 파라미터 묶기
     param_a1 = {'FontSize', fontSize, 'NextPlot', nextPlot, 'XGrid', xGrid, 'YGrid', yGrid};
