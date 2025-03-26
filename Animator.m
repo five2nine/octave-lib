@@ -11,13 +11,13 @@ classdef Animator < handle
     %
     % 메서드:
     %   Animator(filename, varargin) - 객체 생성자, 파일명과 옵션을 설정하여 초기화
-    %   captureFrame()               - 현재 figure의 프레임을 캡처하여 영상에 추가
+    %   capture()               - 현재 figure의 프레임을 캡처하여 영상에 추가
     %   close()                      - VideoWriter 객체를 닫아 파일 저장 완료
     %   delete()                     - 객체 소멸 시 자동으로 close() 실행
     %
     % 설명:
     %   - Octave에서 VideoWriter를 사용하여 동영상을 저장합니다.
-    %   - captureFrame()을 호출하면 현재 figure의 화면을 캡처하여 영상에 추가합니다.
+    %   - capture()을 호출하면 현재 figure의 화면을 캡처하여 영상에 추가합니다.
     %   - close()를 호출하면 동영상 저장을 완료하고 파일을 닫습니다.
     %   - SaveFlag가 false이면 애니메이션을 저장하지 않습니다.
     %
@@ -25,7 +25,7 @@ classdef Animator < handle
     %   anim = Animator("output.mp4", "FrameRate", 30, "SaveFlag", true);
     %   for i = 1:100
     %       plot(rand(1,10)); drawnow;
-    %       anim.captureFrame();
+    %       anim.capture();
     %   end
     %   clear anim; % 객체 삭제 시 자동으로 close() 실행
 
@@ -58,7 +58,7 @@ classdef Animator < handle
 
             if nargin == 0
                 filename = "output.mp4";
-            elseif nargin == 1
+            elseif nargin >= 1
                 filename = varargin{1};
                 varargin(1) = [];
             end
@@ -83,8 +83,8 @@ classdef Animator < handle
             end
         end
 
-        function captureFrame(obj)
-            % captureFrame - 현재 figure의 프레임을 캡처하여 영상에 추가
+        function capture(obj)
+            % capture - 현재 figure의 프레임을 캡처하여 영상에 추가
             %
             % 설명:
             %   - 현재 활성화된 figure의 화면을 캡처하여 저장합니다.
