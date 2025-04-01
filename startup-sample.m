@@ -1,10 +1,11 @@
 % REPL(Read-Eval-Print Loop)은 대화형 환경이다.
+% startup.m 파일은 프로젝트 루트에 위치한다.
 % startup.m REPL 세션이 시작할 떄 가장 먼저 자동으로 실행된다.
 % main.m 프로세스가 시작할 때 clear all 명령에 의해 무효화될 수 있다.
 % 메인 코드에서 clear all 하면 pkg는 무효화되고 default param은 유지된다.
 
 clc; clear all; close all; 
-addpath(genpath("C:\\dev_now\\octave-lib"));
+# addpath(genpath(pwd)); # never run in /users/user
 
 pkg load io
 pkg load signal
