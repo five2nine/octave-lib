@@ -125,7 +125,28 @@ function [filtered_varargin, legend_texts] = extract_semi_colon_string(varargin)
 end
 
 function [varargin, plot_style_texts] = extract_plot_style_string(varargin)
-
+    % extract_plot_style_string - varargin에서 색상, 마커, 라인스타일을 포함하는 스타일 문자열을 추출하는 함수
+    %
+    % 입력:
+    %   varargin - 다양한 입력 인자들 (셀 배열 또는 단일 인자들)
+    %
+    % 출력:
+    %   varargin - 스타일 문자열을 제외한 나머지 인자들
+    %   plot_style_texts - 추출된 스타일 문자열 (색상, 마커, 라인스타일 포함; 없으면 빈 문자열)
+    %
+    % 설명:
+    %   - 입력 인자 중 첫 번째로 발견되는 색상, 마커, 라인스타일을 포함하는 스타일 문자열을 추출하여 plot_style_texts에 저장
+    %   - 나머지 인자들은 varargin에 남겨두고 반환
+    %
+    % 사용 예시:
+    %   [varargin, plot_style_texts] = extract_plot_style_string('ro-', 'LineWidth', 2, 'Color', 'b');
+    %   % varargin = {'LineWidth', 2, 'Color', 'b'}
+    %   % plot_style_texts = 'ro-'
+    %
+    %   [varargin, plot_style_texts] = extract_plot_style_string({"LineWidth", 2, "r*-"});
+    %   % varargin = {'LineWidth', 2}
+    %   % plot_style_texts = 'r*-'
+    
     % varargin이 셀 배열인 경우 이를 평탄화
     if length(varargin) == 1 && iscell(varargin{1})
         varargin = varargin{1};
