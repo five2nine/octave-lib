@@ -54,6 +54,9 @@ function h1 = plotd(varargin)
     % 자동 레전드 형식 추출
     [varargin, legend_texts] = extract_semi_colon_string(varargin);
 
+    % 자동 플롯 패턴 (색상, 마커, 라인 스타일)
+    [varargin, style_texts] = extract_plot_style_string(varargin);
+
     % 기본 plot 파라미터
     param_p = {"LineWidth", 1.2};
     
@@ -65,14 +68,20 @@ function h1 = plotd(varargin)
     if ~isempty(idx)
         display_name = param_p{2*idx};
         param_p([2*idx-1, 2*idx]) = [];
-        param_p = [param_p, [";", display_name, ";"]];
+        # param_p = [param_p, [";", display_name, ";"]];
+        param_p = [param_p, "DisplayName", display_name];
     elseif ~isempty(legend_texts)
         display_name = legend_texts{1};
-        param_p = [param_p, [";", display_name, ";"]];
+        # param_p = [param_p, [";", display_name, ";"]];
+        param_p = [param_p, "DisplayName", display_name];
+    end
+    if ~isempty(style_texts)
+        param_p = [param_p, [style_texts]];
     end
 
     % 플로팅 실행
     h1 = plot(ax, x, y, param_p{:});
+    legend();
 end
 
 
@@ -111,6 +120,49 @@ function [filtered_varargin, legend_texts] = extract_semi_colon_string(varargin)
             legend_texts{end+1} = varargin{i}(2:end-1);  % 세미콜론 제거 후 저장
         else
             filtered_varargin{end+1} = varargin{i};
+        end
+    end
+end
+
+function [varargin, plot_style_texts] = extract_plot_style_string(varargin)
+
+    % varargin이 셀 배열인 경우 이를 평탄화
+    if length(varargin) == 1 && iscell(varargin{1})
+        varargin = varargin{1};
+    end
+
+    % 색상 패턴 (bgrcmykw)
+    color_pattern = '[bgrcmykw]';
+    % 마커 패턴 (.+ox*sdv^<>ph)
+    marker_pattern = '[\.\+ox\*sdv\^<>ph]';
+    % 라인 스타일 패턴 (-, --, :, -.)
+    linestyle_pattern = '(-{1,2}|:|-\.)';
+
+    % 초기화
+    plot_style_texts = "";
+
+    % varargin을 순회하며 첫 번째 스타일 문자열 찾기
+    for i = 1:length(varargin)
+        arg = varargin{i};
+        if ischar(arg) || isstring(arg) % 문자열인지 확인
+            % 포함된 요소 개수 판정
+            num_elements = 0;
+            if !isempty(regexp(arg, color_pattern, "match", "once"))
+                num_elements += 1;
+            end
+            if !isempty(regexp(arg, marker_pattern, "match", "once"))
+                num_elements += 1;
+            end
+            if !isempty(regexp(arg, linestyle_pattern, "match", "once"))
+                num_elements += 1;
+            end
+
+            % 유효한 스타일 문자열이면 추출 후 종료
+            if num_elements >= 1 && num_elements <= 3
+                plot_style_texts = arg;
+                varargin(i) = []; % 해당 요소 제거
+                return;
+            end
         end
     end
 end
