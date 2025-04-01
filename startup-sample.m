@@ -1,14 +1,20 @@
 % REPL(Read-Eval-Print Loop)은 대화형 환경이다.
 % startup.m REPL 세션이 시작할 떄 가장 먼저 자동으로 실행된다.
 % main.m 프로세스가 시작할 때 clear all 명령에 의해 무효화될 수 있다.
+% 메인 코드에서 clear all 하면 pkg는 무효화되고 default param은 유지된다.
 
 clc; clear all; close all; 
 addpath(genpath("C:\\dev_now\\octave-lib"));
 
 pkg load io
 pkg load signal
+# pkg load statistics
+# pkg load image
+# pkg load optim
+# pkg load control
+# pkg load symbolic
 
-# printf(fmt("{mfilename} at octave-lib\n", "#FF5733"));
+printf(fmt("{mfilename} - project\n", "#FF5733"));
 
 fontsize = 16;
 
@@ -25,8 +31,18 @@ color_base = [
     h2c("#9A59D7")  % 고급스러운 보라색
 ];
 
+% Position
+screenSize = get(0, 'ScreenSize'); % [x y width height]
+screenWidth = screenSize(3);
+screenHeight = screenSize(4);
+windowWidth = floor(screenWidth / 3);
+windowHeight = floor(screenHeight / 3);
+left = (screenWidth - windowWidth) / 2;
+bottom = (screenHeight - windowHeight) / 2;
+position = [left, bottom, windowWidth, windowHeight];
+
 % figure
-set(0, "defaultFigurePosition", [1280, 720, 1280, 720]);
+set(0, "defaultFigurePosition", position);
 set(0, "defaultFigureName", "Figure");
 set(0, "defaultFigureColor", "#FFFFFF");
 set(0, "defaultFigureNumberTitle", "off");
