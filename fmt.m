@@ -22,6 +22,7 @@ function formatted_str = fmt(fmt_str, varargin)
     color_code = "#FFD700";
     
     % 중괄호 안의 변수명과 형식을 추출 (정규 표현식 사용)
+    % 중괄호 표시하는 세트 인덱싱을 사용하지 못함
     tokens = regexp(fmt_str, "\{([^}:]+)(?::([^}]+))?\}", "tokens");
     
     for i = 1:length(tokens)
