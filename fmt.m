@@ -19,7 +19,7 @@ function formatted_str = fmt(fmt_str, varargin)
     %   printf(formatted_str);
 
     % 하드코딩된 숫자 색상 설정
-    hightlight = false;
+    hightlight = true;
     color_code = "#FFD700";
     
     % 중괄호 안의 변수명과 형식을 추출 (정규 표현식 사용)
@@ -42,7 +42,17 @@ function formatted_str = fmt(fmt_str, varargin)
         end
         
         % 값이 숫자일 경우 지정된 형식 적용
-        if isnumeric(var_value) && ~isempty(format_spec)
+        # if isnumeric(var_value) && ~isempty(format_spec)
+        #     format_str = ["%" format_spec];
+        #     var_value_str = sprintf(format_str, var_value);
+        # elseif isnumeric(var_value)
+        #     var_value_str = num2str(var_value);
+        # else
+        #     var_value_str = var_value;
+        # end
+
+        % 값이 형식 지정되었을 경우 숫자/문자 모두 적용
+        if ~isempty(format_spec)
             format_str = ["%" format_spec];
             var_value_str = sprintf(format_str, var_value);
         elseif isnumeric(var_value)
@@ -50,7 +60,7 @@ function formatted_str = fmt(fmt_str, varargin)
         else
             var_value_str = var_value;
         end
-        
+
         % 숫자 값에 하드코딩된 색상 적용
         if hightlight && isnumeric(var_value)
             var_value_str = colored(var_value_str, color_code);
